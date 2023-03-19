@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-
 def get_input():
     time_start = int(input('Podaj czas początkowy:'))
     duration = int(input('Podaj czas trwania sygnału:'))
@@ -12,9 +11,7 @@ def get_input():
 
     return time_start, time_to_end, amplitude, sampling_rate
 
-
 def draw_graph(name, time_start, time_to_end, amplitude, sampling_rate, values_y):
-
     # Create a time axis for the signal
     t = np.linspace(time_start, time_to_end, sampling_rate)
 
@@ -44,12 +41,13 @@ def sinus_signal():
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
     frequency = 2 * np.pi / basic_period
-    #phase = np.pi / 4
+    #phase = np.pi / 4 # przesuniecie w fazie
 
-    time = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  # 1000 samples between 0 and 10 seconds
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude * np.sin(frequency * time)
     draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+    histogram(signal)
 
 
 def jump():
