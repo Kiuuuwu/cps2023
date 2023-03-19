@@ -320,7 +320,23 @@ def unitary_impuls():
 
 
 def noise_impuls():
-    return 0
+    # time_start, time_to_end, amplitude, sampling_rate = get_input()
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 2
+    possibility = float(input('Podaj prawdopodobienstwo:'))
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+
+    time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
+    signal_length = nr_of_samplings
+    noise = np.zeros(len(time))
+
+    impulse = np.random.rand(signal_length) < possibility
+    noise[impulse] = 1
+
+    plt.scatter(time, noise)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    histogram(noise)
 
 def histogram(seq) -> dict:
      hist = {}
