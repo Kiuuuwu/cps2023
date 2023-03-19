@@ -213,20 +213,20 @@ def sinus_half_straight_signal():
     histogram(signal)
 
 
-def sinus_double_half_straight_signal():#TODO: Z JAKEIGOŚ POWODU OKRES NIE ZALEZY OD OKRESU TYLKO OD CZESTOTLIWOSCI PROBKOWANIA
+def sinus_double_half_straight_signal():
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = 0,10,10,20
-    # nie dziala dla basic_period = 1, 2
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
-
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
-    for x in range(time_start, time_to_end):
-        for w in range(0, sampling_rate):
-            values_y[x*10 + w] = amplitude * abs(math.sin(2.0 * math.pi * (x*10 + w - time_start*sampling_rate) / basic_period))
 
-    draw_graph("sinus_double_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-    histogram(values_y)
+    frequency = 2 * np.pi / basic_period
+    #phase = np.pi / 4 # przesuniecie w fazie
+
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+
+    signal = amplitude * abs(np.sin(frequency * time))
+    draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+    histogram(signal)
 
 
 def constant_noise():
