@@ -163,33 +163,8 @@ def jump_signal(): #9
 
 
 def unitary_impuls():
-    # # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    # time_start, time_to_end, amplitude, sampling_rate = -2, 2, 10, 50
-    # #ts = int(input('Podaj czas skoku:'))
-    # nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    # #duration = time_to_end - time_start
-    # location = 1
-    #
-    # # Generate the time axis
-    # time = np.arange(time_start, time_to_end, time_to_end / sampling_rate)
-    #
-    # # Generate the impulse signal
-    # signal = np.zeros(len(time))
-    # signal[int(location * sampling_rate)] = amplitude
-    #
-    # # Normalize the signal
-    # signal = signal / np.sqrt(np.mean(signal ** 2))
-    #
-    # plt.scatter(time, signal)
-    # plt.xlabel('Time (s)')
-    # plt.ylabel('Amplitude')
-    # plt.show()
-
-
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
     time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 2
-    #ts = int(input('Podaj czas skoku:'))
-
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     values_y = np.zeros(nr_of_samplings)
     time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
@@ -202,7 +177,6 @@ def unitary_impuls():
             else:
                 values_y[t - time_start * sampling_rate] = 0
 
-    #draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     plt.scatter(time, values_y)
     plt.xlabel('Time (s)')
     plt.ylabel('Amplitude')
