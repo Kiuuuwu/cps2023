@@ -22,18 +22,29 @@ def draw_graph(name, time_start, time_to_end, amplitude, sampling_rate, values_y
     plt.show()
 
 
-# def sinus_signal():
-#     #time_start, time_to_end, amplitude, sampling_rate = get_input()
-#     time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 2
-#     basic_period = float(input('Podaj okres podstawowy sygnału:'))
-#
-#     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-#     values_y = np.zeros(nr_of_samplings)
-#     for x in range(0, nr_of_samplings):
-#         values_y[x] = amplitude * math.sin(2.0 * math.pi * (x - time_start) / basic_period)
-#
-#     draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-#     histogram(values_y)
+def constant_noise():
+    time_start, time_to_end, amplitude, sampling_rate = get_input()
+
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+
+    # Set the sampling rate and duration of the signal
+    values_y = np.random.uniform(-amplitude/2, amplitude/2, nr_of_samplings)
+
+    draw_graph("Constant noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    histogram(values_y)
+
+
+def gaussian_noise():
+    time_start, time_to_end, amplitude, sampling_rate = get_input()
+
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+
+    # Set the sampling rate and duration of the signal
+    values_y = np.random.normal(0, amplitude/2, nr_of_samplings)
+
+    draw_graph("Gaussian noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    histogram(values_y)
+
 def sinus_signal():
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
     time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
@@ -49,36 +60,76 @@ def sinus_signal():
     draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
     histogram(signal)
 
-
-def jump():
-    time_start, time_to_end, amplitude, sampling_rate = get_input()
+def sinus_half_straight_signal():
+    #time_start, time_to_end, amplitude, sampling_rate = get_input()
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
-
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
-    for x in range(0, nr_of_samplings):
-        values_y[x] = amplitude * math.sin(2.0 * math.pi * (x - time_start) / basic_period)
 
-    draw_graph("Constant noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-    histogram(values_y)
+    frequency = 2 * np.pi / basic_period
+    #phase = np.pi / 4 # przesuniecie w fazie
+
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+
+    signal = amplitude / 2 * (np.sin(frequency * time) + abs(np.sin(frequency * time)))
+    draw_graph("sinus_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+    histogram(signal)
+
+
+def sinus_double_half_straight_signal():
+    #time_start, time_to_end, amplitude, sampling_rate = get_input()
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+
+    frequency = 2 * np.pi / basic_period
+    #phase = np.pi / 4 # przesuniecie w fazie
+
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+
+    signal = amplitude * abs(np.sin(frequency * time))
+    draw_graph("sinus_double_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+    histogram(signal)
 
 
 def rectangular_signal(): #6
-    time_start, time_to_end, amplitude, sampling_rate = get_input()
-    # time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
-    basic_period = int(input('Podaj okres podstawowy sygnału:'))
-    fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
-    # basic_period = 2
-    # fill_value = 0.5
+    # #time_start, time_to_end, amplitude, sampling_rate = get_input()
+    # time_start, time_to_end, amplitude, sampling_rate = -5, 10, 10, 100
+    # basic_period = int(input('Podaj okres podstawowy sygnału:'))
+    # fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
+    # # basic_period = 2
+    # # fill_value = 0.5
+    #
+    # nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    # values_y = np.zeros(nr_of_samplings)
+    #
+    # for x in range(time_start, time_to_end, basic_period):
+    #     for i in range(int(basic_period * fill_value * sampling_rate)):
+    #         values_y[x * sampling_rate + i] = amplitude
+    #
+    # draw_graph("Rectangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    # histogram(values_y)
 
+    #time_start, time_to_end, amplitude, sampling_rate = get_input()
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
+    fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     values_y = np.zeros(nr_of_samplings)
 
-    for x in range(time_start, time_to_end, basic_period):
+    frequency = 2 * np.pi / basic_period
+    #phase = np.pi / 4 # przesuniecie w fazie
+
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+
+    # if time <
+    #     signal = amplitude * abs(np.sin(frequency * time))
+
+    for x in range(time_start, time_to_end, int(basic_period)):
         for i in range(int(basic_period * fill_value * sampling_rate)):
             values_y[x * sampling_rate + i] = amplitude
 
-    draw_graph("Rectangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    draw_graph("rectangular_signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
 
@@ -175,6 +226,19 @@ def triangular_signal(): #8
     draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
+def jump():
+    time_start, time_to_end, amplitude, sampling_rate = get_input()
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
+
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    values_y = np.zeros(nr_of_samplings)
+    for x in range(0, nr_of_samplings):
+        values_y[x] = amplitude * math.sin(2.0 * math.pi * (x - time_start) / basic_period)
+
+    draw_graph("Constant noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    histogram(values_y)
+
+
 def jump_signal(): #9
     time_start, time_to_end, amplitude, sampling_rate = get_input()
     ts = int(input('Podaj czas skoku:'))
@@ -196,62 +260,6 @@ def jump_signal(): #9
     draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
-
-def sinus_half_straight_signal():
-    #time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
-    basic_period = float(input('Podaj okres podstawowy sygnału:'))
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-
-    frequency = 2 * np.pi / basic_period
-    #phase = np.pi / 4 # przesuniecie w fazie
-
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
-
-    signal = amplitude / 2 * (np.sin(frequency * time) + abs(np.sin(frequency * time)))
-    draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
-    histogram(signal)
-
-
-def sinus_double_half_straight_signal():
-    #time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
-    basic_period = float(input('Podaj okres podstawowy sygnału:'))
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-
-    frequency = 2 * np.pi / basic_period
-    #phase = np.pi / 4 # przesuniecie w fazie
-
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
-
-    signal = amplitude * abs(np.sin(frequency * time))
-    draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
-    histogram(signal)
-
-
-def constant_noise():
-    time_start, time_to_end, amplitude, sampling_rate = get_input()
-
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-
-    # Set the sampling rate and duration of the signal
-    values_y = np.random.uniform(-amplitude/2, amplitude/2, nr_of_samplings)
-
-    draw_graph("Constant noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-    histogram(values_y)
-
-
-def gaussian_noise():
-    time_start, time_to_end, amplitude, sampling_rate = get_input()
-
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-
-    # Set the sampling rate and duration of the signal
-    values_y = np.random.normal(0, amplitude/2, nr_of_samplings)
-
-    draw_graph("Gaussian noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-    histogram(values_y)
-
 def histogram(seq) -> dict:
      hist = {}
      for i in seq:
@@ -260,8 +268,7 @@ def histogram(seq) -> dict:
      plt.show()
      return 0
 
-
-
+# main:
 user_input = int(input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular\n7 rectangular symmetrical\n8 triangular\n9 jump'))
 if user_input == 1:
     sinus_signal()
