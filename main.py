@@ -94,7 +94,7 @@ def sinus_double_half_straight_signal():
 
 def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 100
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = int(input('Podaj okres podstawowy sygnału:'))
     fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
     # basic_period = 2
@@ -184,51 +184,73 @@ def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
 #
 #     draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
 
+# def triangular_signal(): #8
+#     #time_start, time_to_end, amplitude, sampling_rate = get_input()
+#     time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 10
+#     fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
+#     period = int(input('Podaj okres: '))
+#
+#     nr_of_samplings = sampling_rate * (time_to_end - time_start)
+#     values_y = np.zeros(nr_of_samplings)
+#
+#     for y in range(time_start, time_to_end):    # dla kazdej sekundy
+#         for x in range(0, sampling_rate):   # dla kazdego sampla w danej sekundzie
+#             k = y # y * sampling_rate   # zakladajac ze y jest calkowite
+#             t = y * sampling_rate + x
+#             # if time_start < 0:
+#             #     if t > ts * sampling_rate:
+#             #         values_y[t - time_start * sampling_rate] = amplitude
+#             #     elif t == ts * sampling_rate:
+#             #         values_y[t - time_start * sampling_rate] = amplitude / 2
+#             #     else:
+#             #         values_y[t - time_start * sampling_rate] = 0
+#             # if time_start >= 0:
+#
+#             #parzyste
+#             if t < k*period* sampling_rate + time_start* sampling_rate or t < fill_value * period* sampling_rate + k*period* sampling_rate + time_start* sampling_rate:
+#                 values_y[t] = amplitude * (t - k*period* sampling_rate - time_start* sampling_rate) / (fill_value * period* sampling_rate)
+#                 print('es1')
+#             elif t < fill_value * period* sampling_rate + time_start* sampling_rate + k*period* sampling_rate or t < period* sampling_rate + k*period* sampling_rate + time_start* sampling_rate:
+#                 values_y[t] = - amplitude * (t - k*period* sampling_rate - time_start* sampling_rate) / (period* sampling_rate * (1 - fill_value)) + amplitude / (1 - fill_value)
+#                 print('es2')
+#             # #nieparzyste
+#             # elif t < (2 * k + 1) * period* sampling_rate + time_start* sampling_rate or t < fill_value * period* sampling_rate + (2 * k + 1) * period* sampling_rate + time_start* sampling_rate:
+#             #     values_y[t] = amplitude * (t - (2 * k + 1) * period* sampling_rate - time_start* sampling_rate) / (fill_value * period* sampling_rate)
+#             #     print('es3')
+#             # elif t < fill_value * period* sampling_rate + time_start* sampling_rate + (2 * k + 1) * period* sampling_rate or t < period* sampling_rate + (2 * k + 1) * period* sampling_rate + time_start* sampling_rate:
+#             #     values_y[t] = - amplitude * (t - (2 * k + 1) * period* sampling_rate - time_start* sampling_rate) / (
+#             #                 period * sampling_rate* (1 - fill_value)) + amplitude / (1 - fill_value)
+#             #     print('es4')
+#             else:
+#                 print('dupa')
+#
+#     draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+#     histogram(values_y)
+
 def triangular_signal(): #8
-    #time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 10
-    fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
-    period = int(input('Podaj okres: '))
-
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
+    # Define the parameters of the triangular signal
+    frequency = 2 * np.pi / basic_period
+    duration = time_to_end - time_start
 
-    for y in range(time_start, time_to_end):    # dla kazdej sekundy
-        for x in range(0, sampling_rate):   # dla kazdego sampla w danej sekundzie
-            k = y # y * sampling_rate   # zakladajac ze y jest calkowite
-            t = y * sampling_rate + x
-            # if time_start < 0:
-            #     if t > ts * sampling_rate:
-            #         values_y[t - time_start * sampling_rate] = amplitude
-            #     elif t == ts * sampling_rate:
-            #         values_y[t - time_start * sampling_rate] = amplitude / 2
-            #     else:
-            #         values_y[t - time_start * sampling_rate] = 0
-            # if time_start >= 0:
+    # Create the time axis
+    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
 
-            #parzyste
-            if t < k*period* sampling_rate + time_start* sampling_rate or t < fill_value * period* sampling_rate + k*period* sampling_rate + time_start* sampling_rate:
-                values_y[t] = amplitude * (t - k*period* sampling_rate - time_start* sampling_rate) / (fill_value * period* sampling_rate)
-                print('es1')
-            elif t < fill_value * period* sampling_rate + time_start* sampling_rate + k*period* sampling_rate or t < period* sampling_rate + k*period* sampling_rate + time_start* sampling_rate:
-                values_y[t] = - amplitude * (t - k*period* sampling_rate - time_start* sampling_rate) / (period* sampling_rate * (1 - fill_value)) + amplitude / (1 - fill_value)
-                print('es2')
-            # #nieparzyste
-            # elif t < (2 * k + 1) * period* sampling_rate + time_start* sampling_rate or t < fill_value * period* sampling_rate + (2 * k + 1) * period* sampling_rate + time_start* sampling_rate:
-            #     values_y[t] = amplitude * (t - (2 * k + 1) * period* sampling_rate - time_start* sampling_rate) / (fill_value * period* sampling_rate)
-            #     print('es3')
-            # elif t < fill_value * period* sampling_rate + time_start* sampling_rate + (2 * k + 1) * period* sampling_rate or t < period* sampling_rate + (2 * k + 1) * period* sampling_rate + time_start* sampling_rate:
-            #     values_y[t] = - amplitude * (t - (2 * k + 1) * period* sampling_rate - time_start* sampling_rate) / (
-            #                 period * sampling_rate* (1 - fill_value)) + amplitude / (1 - fill_value)
-            #     print('es4')
-            else:
-                print('dupa')
-
-    draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
-    histogram(values_y)
+    # Create the triangular signal
+    signal = amplitude * np.abs(2 * (time * frequency - np.floor(time * frequency + 0.5)))
+    # draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+    # Plot the signal
+    plt.plot(time, signal)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
+    plt.title('Triangular Signal')
+    plt.show()
+    histogram(signal)
 
 def jump_signal(): #9
-    #time_start, time_to_end, amplitude, sampling_rate = get_input()
+    # time_start, time_to_end, amplitude, sampling_rate = get_input()
     time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
     ts = int(input('Podaj czas skoku:'))
 
@@ -248,6 +270,58 @@ def jump_signal(): #9
     draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
+
+def unitary_impuls():
+    # # time_start, time_to_end, amplitude, sampling_rate = get_input()
+    # time_start, time_to_end, amplitude, sampling_rate = -2, 2, 10, 50
+    # #ts = int(input('Podaj czas skoku:'))
+    # nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    # #duration = time_to_end - time_start
+    # location = 1
+    #
+    # # Generate the time axis
+    # time = np.arange(time_start, time_to_end, time_to_end / sampling_rate)
+    #
+    # # Generate the impulse signal
+    # signal = np.zeros(len(time))
+    # signal[int(location * sampling_rate)] = amplitude
+    #
+    # # Normalize the signal
+    # signal = signal / np.sqrt(np.mean(signal ** 2))
+    #
+    # plt.scatter(time, signal)
+    # plt.xlabel('Time (s)')
+    # plt.ylabel('Amplitude')
+    # plt.show()
+
+
+    # time_start, time_to_end, amplitude, sampling_rate = get_input()
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 2
+    #ts = int(input('Podaj czas skoku:'))
+
+    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    values_y = np.zeros(nr_of_samplings)
+    time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
+
+    for y in range(time_start, time_to_end):
+        for x in range(0, sampling_rate):
+            t = y * sampling_rate + x
+            if t == 0:
+                values_y[t - time_start * sampling_rate] = 1
+            else:
+                values_y[t - time_start * sampling_rate] = 0
+
+    #draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
+    plt.scatter(time, values_y)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    histogram(values_y)
+
+
+def noise_impuls():
+    return 0
+
 def histogram(seq) -> dict:
      hist = {}
      for i in seq:
@@ -257,7 +331,8 @@ def histogram(seq) -> dict:
      return 0
 
 # main:
-user_input = int(input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular\n7 rectangular symmetrical\n8 triangular\n9 jump'))
+user_input = int(input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
+                       '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
 if user_input == 1:
     sinus_signal()
 elif user_input == 2:
@@ -276,5 +351,9 @@ elif user_input == 8:
     triangular_signal()
 elif user_input == 9:
     jump_signal()
+elif user_input == 10:
+    unitary_impuls()
+elif user_input == 11:
+    noise_impuls()
 else:
     print('niewlasciwy input')
