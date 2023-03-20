@@ -73,6 +73,8 @@ def sinus_signal():
 
     count_means(signal)
 
+    return signal
+
 
 def sinus_half_straight_signal():
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -89,6 +91,8 @@ def sinus_half_straight_signal():
     histogram(signal)
 
     count_means(signal)
+
+    return signal
 
 
 def sinus_double_half_straight_signal():
@@ -238,17 +242,44 @@ def histogram(seq) -> dict:
      plt.show()
      return 0
 
+def sum(signal1, signal2):
+    # l1 = x1.size
+    # l2 = x2.size
+    #
+    # if l1 < l2:
+    #     x1 = [x1 zeros(1, l2 - l1)]
+    # else:
+    #     x2 = [x2 zeros(1, l1 - l2)]
+
+    # Define time vector
+    t = np.linspace(0, 2 * np.pi, 1000)
+
+    # Add signals together
+    signal_sum = signal1 + signal2
+
+    # Plot signals
+    fig, ax = plt.subplots()
+    ax.plot(t, signal1, label=signal1)
+    ax.plot(t, signal2, label=signal2)
+    ax.plot(t, signal_sum, label='sum')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Amplitude')
+    ax.legend()
+    plt.show()
+
+
 # main:
 user_input = int(input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
                        '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
 if user_input == 1:
-    sinus_signal()
+    sinus = sinus_signal()
+    sinus_half_straight = sinus_half_straight_signal() #todo: to wywalic
 elif user_input == 2:
     gaussian_noise()
 elif user_input == 3:
     constant_noise()
 elif user_input == 4:
-    sinus_half_straight_signal()
+    sinus_half_straight = sinus_half_straight_signal()
 elif user_input == 5:
     sinus_double_half_straight_signal()
 elif user_input == 6:
@@ -265,3 +296,4 @@ elif user_input == 11:
     noise_impuls()
 else:
     print('niewlasciwy input')
+sum(sinus, sinus_half_straight)
