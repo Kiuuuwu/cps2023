@@ -243,21 +243,11 @@ def histogram(seq) -> dict:
      return 0
 
 def sum(signal1, signal2):
-    # l1 = x1.size
-    # l2 = x2.size
-    #
-    # if l1 < l2:
-    #     x1 = [x1 zeros(1, l2 - l1)]
-    # else:
-    #     x2 = [x2 zeros(1, l1 - l2)]
-
     # Define time vector
     t = np.linspace(0, 2 * np.pi, 1000)
 
-    # Add signals together
     signal_sum = signal1 + signal2
 
-    # Plot signals
     fig, ax = plt.subplots()
     ax.plot(t, signal1, label=signal1)
     ax.plot(t, signal2, label=signal2)
@@ -267,33 +257,51 @@ def sum(signal1, signal2):
     ax.legend()
     plt.show()
 
+def big_input():
+    user_input = int(
+        input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
+              '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
+    signal = 0
+    if user_input == 1:
+        signal = sinus_signal()
+    elif user_input == 2:
+        signal = gaussian_noise()
+    elif user_input == 3:
+        signal = constant_noise()
+    elif user_input == 4:
+        signal = sinus_half_straight_signal()
+    elif user_input == 5:
+        signal = sinus_double_half_straight_signal()
+    elif user_input == 6:
+        signal = rectangular_signal()
+    elif user_input == 7:
+        signal = rectangular_symmetrical_signal()
+    elif user_input == 8:
+        signal = triangular_signal()
+    elif user_input == 9:
+        signal = jump_signal()
+    elif user_input == 10:
+        signal = unitary_impuls()
+    elif user_input == 11:
+        signal = noise_impuls()
+    else:
+        print('niewlasciwy input')
+    return signal
 
 # main:
-user_input = int(input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
-                       '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
-if user_input == 1:
-    sinus = sinus_signal()
-    sinus_half_straight = sinus_half_straight_signal() #todo: to wywalic
-elif user_input == 2:
-    gaussian_noise()
-elif user_input == 3:
-    constant_noise()
-elif user_input == 4:
-    sinus_half_straight = sinus_half_straight_signal()
-elif user_input == 5:
-    sinus_double_half_straight_signal()
-elif user_input == 6:
-    rectangular_signal()
-elif user_input == 7:
-    rectangular_symmetrical_signal()
-elif user_input == 8:
-    triangular_signal()
-elif user_input == 9:
-    jump_signal()
-elif user_input == 10:
-    unitary_impuls()
-elif user_input == 11:
-    noise_impuls()
-else:
-    print('niewlasciwy input')
-sum(sinus, sinus_half_straight)
+user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
+if user_input1 == 1:
+    signal = big_input()
+
+elif user_input1 == 2:
+    print('choose what are you going to add')
+    signal1 = big_input()
+
+    print('choose second thing to add')
+    signal2 = big_input()
+    sum(signal1, signal2)
+
+
+
+
+
