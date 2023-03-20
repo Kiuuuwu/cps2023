@@ -45,6 +45,8 @@ def constant_noise():
     draw_graph("Constant noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
+    return values_y
+
 
 def gaussian_noise():
     time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -56,6 +58,8 @@ def gaussian_noise():
 
     draw_graph("Gaussian noise", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
+
+    return values_y
 
 def sinus_signal():
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -111,6 +115,8 @@ def sinus_double_half_straight_signal():
 
     count_means(signal)
 
+    return signal
+
 
 def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -129,6 +135,8 @@ def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to
     histogram(values_y)
 
     count_means(values_y)
+
+    return values_y
 
 def rectangular_symmetrical_signal(): #7
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -150,6 +158,8 @@ def rectangular_symmetrical_signal(): #7
 
     count_means(values_y)
 
+    return values_y
+
 def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     """Perform linear interpolation for x between (x1,y1) and (x2,y2) """
 
@@ -168,6 +178,8 @@ def triangular_signal(): #8
     histogram(signal)
 
     count_means(signal)
+
+    return signal
 
 def jump_signal(): #9
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -192,6 +204,8 @@ def jump_signal(): #9
 
     count_means(values_y)
 
+    return values_y
+
 
 def unitary_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -214,6 +228,8 @@ def unitary_impuls():
     plt.show()
     histogram(values_y)
 
+    return values_y
+
 
 def noise_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -234,13 +250,14 @@ def noise_impuls():
     plt.show()
     histogram(noise)
 
+    return noise
+
 def histogram(seq) -> dict:
      hist = {}
      for i in seq:
          hist[i] = hist.get(i, 0) + 1
      plt.hist(hist)
      plt.show()
-     return 0
 
 def sum(signal1, signal2):
     # Define time vector
@@ -254,7 +271,7 @@ def sum(signal1, signal2):
     ax.plot(t, signal_sum, label='sum')
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
-    ax.legend()
+    #ax.legend()
     plt.show()
 
 def big_input():
