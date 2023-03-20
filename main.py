@@ -2,6 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+def count_means(signal):
+    mean = np.mean(signal)
+    abs_mean = np.mean(np.abs(signal))
+    effective_value = np.sqrt(np.mean(signal ** 2))
+    variance = np.var(signal)
+    med_power = np.median(signal ** 2)
+
+    print("Mean value:", mean)
+    print("Absolute mean value:", abs_mean)
+    print("Effective value (RMS):", effective_value)
+    print("Variance:", variance)
+    print("Median power:", med_power)
 def get_input():
     time_start = int(input('Podaj czas początkowy:'))
     duration = int(input('Podaj czas trwania sygnału:'))
@@ -59,6 +71,9 @@ def sinus_signal():
     draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
     histogram(signal)
 
+    count_means(signal)
+
+
 def sinus_half_straight_signal():
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
     time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
@@ -72,6 +87,8 @@ def sinus_half_straight_signal():
     signal = amplitude / 2 * (np.sin(frequency * time) + abs(np.sin(frequency * time)))
     draw_graph("sinus_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
     histogram(signal)
+
+    count_means(signal)
 
 
 def sinus_double_half_straight_signal():
@@ -87,6 +104,8 @@ def sinus_double_half_straight_signal():
     signal = amplitude * abs(np.sin(frequency * time))
     draw_graph("sinus_double_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
     histogram(signal)
+
+    count_means(signal)
 
 
 def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
@@ -104,6 +123,8 @@ def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to
 
     draw_graph("Rectangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
+
+    count_means(values_y)
 
 def rectangular_symmetrical_signal(): #7
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -123,6 +144,8 @@ def rectangular_symmetrical_signal(): #7
     draw_graph("Rectangular symmetrical signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
+    count_means(values_y)
+
 def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     """Perform linear interpolation for x between (x1,y1) and (x2,y2) """
 
@@ -139,6 +162,8 @@ def triangular_signal(): #8
     signal = amplitude * np.abs(2 * (time * frequency - np.floor(time * frequency + 0.5)))
     draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
     histogram(signal)
+
+    count_means(signal)
 
 def jump_signal(): #9
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -160,6 +185,8 @@ def jump_signal(): #9
 
     draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
+
+    count_means(values_y)
 
 
 def unitary_impuls():
