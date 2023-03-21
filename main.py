@@ -440,6 +440,13 @@ def read_from_csv(filename):
             t.append(float(row[0]))
             signal.append(float(row[1]))
 
+    fig, ax = plt.subplots()
+    ax.plot(t, signal, label='signal from file')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Amplitude')
+    #ax.legend()
+    plt.show()
+
     return t, signal
 
 
@@ -508,4 +515,3 @@ elif user_input1 == 5:
 
 elif user_input1 == 6:
     time, signal = read_from_csv(filename)
-    #draw_graph(signal, )
