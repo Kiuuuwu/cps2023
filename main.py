@@ -164,8 +164,8 @@ def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     return ((y2 - y1) * x + x2 * y1 - x1 * y2) / (x2 - x1)
 
 def triangular_signal(sampling_rate1, time_start1, time_to_stop1): #8
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
+    #time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
+    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     frequency = 2 * np.pi / basic_period
@@ -272,18 +272,6 @@ def sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
 
     t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
 
-    #mozna zrobic filowanie zerami dwa sygnaly zeby tych zer bylo tyle ile sampling_rate * (time_to_end - time_start)
-    # s1 = np.zeros(sampling_rate * (time_to_end - time_start))
-    # s2 = np.zeros(sampling_rate * (time_to_end - time_start))
-    #
-    # # signal1 = s1 + signal1  #nie moze ich dodac jak maja rozna liczbe danych
-    # # signal2 = s2 + signal2
-    #
-    # for x in s1:
-    #     for y in signal1:
-
-
-
     signal_sum = signal1 + signal2
 
     fig, ax = plt.subplots()
@@ -298,8 +286,6 @@ def sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     return signal_sum
 
 def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
-    # Define time vector
-    #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
 
     time_start = t01
     time_to_end = tk1
@@ -309,7 +295,7 @@ def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
+    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))
 
     signal_sum = signal1 - signal2
 
@@ -324,7 +310,6 @@ def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
 
     return signal_sum
 
-#todo: to nie wyglada na poprawne mnozenie
 def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     # Define time vector
     #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
@@ -353,8 +338,6 @@ def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     return signal_sum
 
 def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
-    # Define time vector
-    #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
 
     time_start = t01
     time_to_end = tk1
@@ -364,7 +347,7 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
+    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))
 
     for i in range (0, signal2.size):
         if signal2[i] == 0:
@@ -417,12 +400,7 @@ def big_input(sampling_rate, time_start, time_to_end):
 
 
 def save_to_csv(filename, time_start, time_to_end, t_step, signal):
-    # Define the time axis
     t = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
-    # Calculate the sinusoidal signal
-    #sin_signal = np.sin(t)
-
-    # Save the signal to a CSV file
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Time', 'Signal'])
@@ -430,10 +408,9 @@ def save_to_csv(filename, time_start, time_to_end, t_step, signal):
             writer.writerow([t[i], signal[i]])
 
 def read_from_csv(filename):
-    # Read the signal data from the CSV file
     with open(filename, 'r') as csvfile:
         reader = csv.reader(csvfile)
-        next(reader)  # skip the header row
+        next(reader)
         t = []
         signal = []
         for row in reader:
