@@ -77,7 +77,7 @@ def sinus_signal():
 
     count_means(signal)
 
-    return signal
+    return signal, time_start, time_to_end
 
 
 def sinus_half_straight_signal():
@@ -96,7 +96,7 @@ def sinus_half_straight_signal():
 
     count_means(signal)
 
-    return signal
+    return signal, time_start, time_to_end
 
 
 def sinus_double_half_straight_signal():
@@ -115,7 +115,7 @@ def sinus_double_half_straight_signal():
 
     count_means(signal)
 
-    return signal
+    return signal, time_start, time_to_end
 
 
 def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
@@ -136,7 +136,7 @@ def rectangular_signal(): #6    #todo: period musi byc intem - kaszan, trzeba to
 
     count_means(values_y)
 
-    return values_y
+    return values_y, time_start, time_to_end
 
 def rectangular_symmetrical_signal(): #7
     #time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -158,7 +158,7 @@ def rectangular_symmetrical_signal(): #7
 
     count_means(values_y)
 
-    return values_y
+    return values_y, time_start, time_to_end
 
 def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     """Perform linear interpolation for x between (x1,y1) and (x2,y2) """
@@ -179,7 +179,7 @@ def triangular_signal(): #8
 
     count_means(signal)
 
-    return signal
+    return signal, time_start, time_to_end
 
 def jump_signal(): #9
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
@@ -204,12 +204,12 @@ def jump_signal(): #9
 
     count_means(values_y)
 
-    return values_y
-
+    return values_y, time_start, time_to_end
+0
 
 def unitary_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 2
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     values_y = np.zeros(nr_of_samplings)
     time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
@@ -228,12 +228,12 @@ def unitary_impuls():
     plt.show()
     histogram(values_y)
 
-    return values_y
+    return values_y, time_start, time_to_end
 
 
 def noise_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 2
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
     possibility = float(input('Podaj prawdopodobienstwo:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
@@ -250,7 +250,7 @@ def noise_impuls():
     plt.show()
     histogram(noise)
 
-    return noise
+    return noise, time_start, time_to_end
 
 def histogram(seq) -> dict:
      hist = {}
@@ -259,9 +259,19 @@ def histogram(seq) -> dict:
      plt.hist(hist)
      plt.show()
 
-def sum(signal1, signal2):
+def sum(signal1, t01, tk1, signal2, t02, tk2):
     # Define time vector
-    t = np.linspace(0, 2 * np.pi, 1000)
+    #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
+
+    time_start = t01
+    time_to_end = tk1
+
+    if t01 > t02:
+        time_start = t02
+    if tk1 < tk2:
+        time_to_end = tk2
+
+    t = np.linspace(time_start, time_to_end, 1000)  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
 
     signal_sum = signal1 + signal2
 
@@ -278,32 +288,32 @@ def big_input():
     user_input = int(
         input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
               '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
-    signal = 0
+    signal, time_start, time_to_end = 0, 0, 0
     if user_input == 1:
-        signal = sinus_signal()
+        signal, time_start, time_to_end = sinus_signal()
     elif user_input == 2:
-        signal = gaussian_noise()
+        signal, time_start, time_to_end = gaussian_noise()
     elif user_input == 3:
-        signal = constant_noise()
+        signal, time_start, time_to_end = constant_noise()
     elif user_input == 4:
-        signal = sinus_half_straight_signal()
+        signal, time_start, time_to_end = sinus_half_straight_signal()
     elif user_input == 5:
-        signal = sinus_double_half_straight_signal()
+        signal, time_start, time_to_end = sinus_double_half_straight_signal()
     elif user_input == 6:
-        signal = rectangular_signal()
+        signal, time_start, time_to_end = rectangular_signal()
     elif user_input == 7:
-        signal = rectangular_symmetrical_signal()
+        signal, time_start, time_to_end = rectangular_symmetrical_signal()
     elif user_input == 8:
-        signal = triangular_signal()
+        signal, time_start, time_to_end = triangular_signal()
     elif user_input == 9:
-        signal = jump_signal()
+        signal, time_start, time_to_end = jump_signal()
     elif user_input == 10:
-        signal = unitary_impuls()
+        signal, time_start, time_to_end = unitary_impuls()
     elif user_input == 11:
-        signal = noise_impuls()
+        signal, time_start, time_to_end = noise_impuls()
     else:
         print('niewlasciwy input')
-    return signal
+    return signal, time_start, time_to_end
 
 # main:
 user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
@@ -312,11 +322,11 @@ if user_input1 == 1:
 
 elif user_input1 == 2:
     print('choose what are you going to add')
-    signal1 = big_input()
+    signal1, t01, tk1 = big_input()
 
     print('choose second thing to add')
-    signal2 = big_input()
-    sum(signal1, signal2)
+    signal2, t02, tk2 = big_input()
+    sum(signal1, t01, tk1, signal2, t02, tk2)
 
 
 
