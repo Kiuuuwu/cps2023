@@ -349,7 +349,7 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
 
     t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))
 
-    for i in range (0, signal2.size):
+    for i in range (0, len(signal2)):
         if signal2[i] == 0:
             signal2[i] = 0.00001
 
@@ -469,10 +469,10 @@ elif user_input1 == 4:
     time_start = int(input('enter starting time: '))
     time_to_stop = int(input('enter end time: '))
 
-    print('choose what are you going to subtract')
+    print('choose what are you going to multiply')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
 
-    print('choose second thing to subtract')
+    print('choose second thing to multiply')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
     signal = multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
     save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
@@ -482,13 +482,93 @@ elif user_input1 == 5:
     time_start = int(input('enter starting time: '))
     time_to_stop = int(input('enter end time: '))
 
-    print('choose what are you going to subtract')
+    print('choose what are you going to divide')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
 
-    print('choose second thing to subtract')
+    print('choose second thing to divide')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
     signal = divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
     save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
-elif user_input1 == 6:
+elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zapisanego sygnalu
     time, signal = read_from_csv(filename)
+    user_input2 = int(input('1 add this signal'
+                            '\n2 subtract signal from this signal'
+                            '\n3 subtract this signal from another signal'
+                            '\n4 multiply this signal'
+                            '\n5 divide this signal by another signal'
+                            '\n6 divide by this signal'))
+    if user_input2 == 1:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+
+        signal1 = signal
+
+        print('choose second thing to add')
+        signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
+        signal = sum(signal1, t02, tk2, signal2, t02, tk2, sampling_rate)
+
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
+
+    elif user_input2 == 2:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+
+        signal1 = signal
+
+        print('choose second thing to subtract')
+        signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
+        signal = subtract(signal1, t02, tk2, signal2, t02, tk2, sampling_rate)
+
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
+
+    elif user_input2 == 3:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+
+        print('choose what are you going to subtract')
+        signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
+
+        signal2 = signal
+        signal = subtract(signal1, t01, tk1, signal2, t01, tk1, sampling_rate)
+
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
+
+    elif user_input2 == 4:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+        signal1 = signal
+
+        print('choose second thing to multiply')
+        signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
+        signal = multiply(signal1, t02, tk2, signal2, t02, tk2, sampling_rate)
+
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
+
+    elif user_input2 == 5:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+
+        signal1 = signal
+
+        print('choose second thing to divide')
+        signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
+        signal = divide(signal1, t02, tk2, signal2, t02, tk2, sampling_rate)
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
+
+    else:
+        sampling_rate = int(input('enter sampling rate: '))
+        time_start = int(input('enter starting time: '))
+        time_to_stop = int(input('enter end time: '))
+
+        print('choose what are you going to divide')
+        signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
+
+        signal2 = signal
+        signal = divide(signal1, t01, tk1, signal2, t01, tk1, sampling_rate)
+        save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
