@@ -339,7 +339,7 @@ def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
         time_to_end = tk2
 
     t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
-
+    #signal2[signal2 < 0] = 0
     signal_sum = signal1 * signal2
 
     fig, ax = plt.subplots()
@@ -366,6 +366,11 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
 
     t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
 
+    for i in range (0, signal2.size):
+        if signal2[i] == 0:
+            signal2[i] = 0.00001
+
+
     signal_sum = signal1 / signal2
 
     fig, ax = plt.subplots()
@@ -377,38 +382,59 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     #ax.legend()
     plt.show()
 
-def big_input(sampling_rate, time_start, time_to_stop):
+def big_input(sampling_rate, time_start, time_to_end):
     user_input = int(
         input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
               '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
     signal = 0
     if user_input == 1:
-        signal, time_start, time_to_end = sinus_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = sinus_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 2:
-        signal, time_start, time_to_end = gaussian_noise(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = gaussian_noise(sampling_rate, time_start, time_to_end)
     elif user_input == 3:
-        signal, time_start, time_to_end = constant_noise(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = constant_noise(sampling_rate, time_start, time_to_end)
     elif user_input == 4:
-        signal, time_start, time_to_end = sinus_half_straight_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = sinus_half_straight_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 5:
-        signal, time_start, time_to_end = sinus_double_half_straight_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = sinus_double_half_straight_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 6:
-        signal, time_start, time_to_end = rectangular_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = rectangular_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 7:
-        signal, time_start, time_to_end = rectangular_symmetrical_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = rectangular_symmetrical_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 8:
-        signal, time_start, time_to_end = triangular_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = triangular_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 9:
-        signal, time_start, time_to_end = jump_signal(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = jump_signal(sampling_rate, time_start, time_to_end)
     elif user_input == 10:
-        signal, time_start, time_to_end = unitary_impuls(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = unitary_impuls(sampling_rate, time_start, time_to_end)
     elif user_input == 11:
-        signal, time_start, time_to_end = noise_impuls(sampling_rate, time_start, time_to_stop)
+        signal, time_start, time_to_end = noise_impuls(sampling_rate, time_start, time_to_end)
     else:
         print('niewlasciwy input')
     return signal, time_start, time_to_end
 
 # main:
+
+# # Define the time axis
+# t = np.linspace(0, 2*np.pi, 1000)
+#
+# # Define the sinusoidal signal
+# sin_signal = np.sin(t)
+#
+# # Define the half-rectified sinusoidal signal
+# half_rect_signal = np.sin(t)
+# half_rect_signal[half_rect_signal < 0] = 0
+#
+# # Multiply the two signals
+# mult_signal = sin_signal * half_rect_signal
+#
+# # Plot the signals
+# plt.plot(t, sin_signal, label='Sinusoidal signal')
+# plt.plot(t, half_rect_signal, label='Half-rectified sinusoidal signal')
+# plt.plot(t, mult_signal, label='Multiplication of signals')
+# plt.legend()
+# plt.show()
+
 user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
 if user_input1 == 1:
     sampling_rate = 0
