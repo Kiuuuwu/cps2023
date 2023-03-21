@@ -284,6 +284,31 @@ def sum(signal1, t01, tk1, signal2, t02, tk2):
     #ax.legend()
     plt.show()
 
+def subtract(signal1, t01, tk1, signal2, t02, tk2):
+    # Define time vector
+    #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
+
+    time_start = t01
+    time_to_end = tk1
+
+    if t01 > t02:
+        time_start = t02
+    if tk1 < tk2:
+        time_to_end = tk2
+
+    t = np.linspace(time_start, time_to_end, 1000)  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
+
+    signal_sum = signal1 - signal2
+
+    fig, ax = plt.subplots()
+    ax.plot(t, signal1, label=signal1)
+    ax.plot(t, signal2, label=signal2)
+    ax.plot(t, signal_sum, label='sum')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Amplitude')
+    #ax.legend()
+    plt.show()
+
 def big_input():
     user_input = int(
         input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
@@ -327,6 +352,15 @@ elif user_input1 == 2:
     print('choose second thing to add')
     signal2, t02, tk2 = big_input()
     sum(signal1, t01, tk1, signal2, t02, tk2)
+
+elif user_input1 == 3:
+    print('choose what are you going to subtract')
+    signal1, t01, tk1 = big_input()
+
+    print('choose second thing to subtract')
+    signal2, t02, tk2 = big_input()
+    subtract(signal1, t01, tk1, signal2, t02, tk2)
+
 
 
 
