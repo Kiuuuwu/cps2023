@@ -14,10 +14,12 @@ def count_means(signal):
     print("Effective value (RMS):", effective_value)
     print("Variance:", variance)
     print("Median power:", med_power)
-def get_input(sampling_rate):
-    time_start = int(input('Podaj czas początkowy:'))
-    duration = int(input('Podaj czas trwania sygnału:'))
-    time_to_end = time_start + duration
+def get_input(sampling_rate, time_start, time_to_end):
+    if time_start == -1001:
+        time_start = int(input('Podaj czas początkowy:'))
+    if time_to_end == -1001:
+        duration = int(input('Podaj czas trwania sygnału:'))
+        time_to_end = time_start + duration
     amplitude = float(input('Podaj amplitude sygnału:'))
     if sampling_rate == 0:
         sampling_rate = int(input('Podaj częstotliwość próbkowania:'))
@@ -35,8 +37,8 @@ def draw_graph(name, time_start, time_to_end, amplitude, sampling_rate, values_y
     plt.show()
 
 
-def constant_noise(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def constant_noise(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
 
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
@@ -49,8 +51,8 @@ def constant_noise(sampling_rate1):
     return values_y, time_start, time_to_end
 
 
-def gaussian_noise(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def gaussian_noise(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
 
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
@@ -62,8 +64,8 @@ def gaussian_noise(sampling_rate1):
 
     return values_y, time_start, time_to_end
 
-def sinus_signal(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def sinus_signal(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -81,8 +83,8 @@ def sinus_signal(sampling_rate1):
     return signal, time_start, time_to_end
 
 
-def sinus_half_straight_signal(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def sinus_half_straight_signal(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -100,8 +102,8 @@ def sinus_half_straight_signal(sampling_rate1):
     return signal, time_start, time_to_end
 
 
-def sinus_double_half_straight_signal(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def sinus_double_half_straight_signal(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -119,8 +121,8 @@ def sinus_double_half_straight_signal(sampling_rate1):
     return signal, time_start, time_to_end
 
 
-def rectangular_signal(sampling_rate1): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def rectangular_signal(sampling_rate1, time_start1, time_to_stop1): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = int(input('Podaj okres podstawowy sygnału:'))
     fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
@@ -139,8 +141,8 @@ def rectangular_signal(sampling_rate1): #6    #todo: period musi byc intem - kas
 
     return values_y, time_start, time_to_end
 
-def rectangular_symmetrical_signal(sampling_rate1): #7
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def rectangular_symmetrical_signal(sampling_rate1, time_start1, time_to_stop1): #7
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = int(input('Podaj okres podstawowy sygnału:'))
     fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
@@ -166,8 +168,8 @@ def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
 
     return ((y2 - y1) * x + x2 * y1 - x1 * y2) / (x2 - x1)
 
-def triangular_signal(sampling_rate1): #8
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def triangular_signal(sampling_rate1, time_start1, time_to_stop1): #8
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -183,8 +185,8 @@ def triangular_signal(sampling_rate1): #8
 
     return signal, time_start, time_to_end
 
-def jump_signal(sampling_rate1): #9
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def jump_signal(sampling_rate1, time_start1, time_to_stop1): #9
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     ts = int(input('Podaj czas skoku:'))
 
@@ -207,10 +209,10 @@ def jump_signal(sampling_rate1): #9
     count_means(values_y)
 
     return values_y, time_start, time_to_end
-0
 
-def unitary_impuls(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+
+def unitary_impuls(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     values_y = np.zeros(nr_of_samplings)
@@ -233,8 +235,8 @@ def unitary_impuls(sampling_rate1):
     return values_y, time_start, time_to_end
 
 
-def noise_impuls(sampling_rate1):
-    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1)
+def noise_impuls(sampling_rate1, time_start1, time_to_stop1):
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     possibility = float(input('Podaj prawdopodobienstwo:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -323,33 +325,33 @@ def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     #ax.legend()
     plt.show()
 
-def big_input(sampling_rate):
+def big_input(sampling_rate, time_start, time_to_stop):
     user_input = int(
         input('1 sinus\n2 gausian\n3 constant\n4 sinus half straight\n5 sinus double half straight\n6 rectangular'
               '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
-    signal, time_start, time_to_end = 0, 0, 0
+    signal = 0
     if user_input == 1:
-        signal, time_start, time_to_end = sinus_signal(sampling_rate)
+        signal, time_start, time_to_end = sinus_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 2:
-        signal, time_start, time_to_end = gaussian_noise(sampling_rate)
+        signal, time_start, time_to_end = gaussian_noise(sampling_rate, time_start, time_to_stop)
     elif user_input == 3:
-        signal, time_start, time_to_end = constant_noise(sampling_rate)
+        signal, time_start, time_to_end = constant_noise(sampling_rate, time_start, time_to_stop)
     elif user_input == 4:
-        signal, time_start, time_to_end = sinus_half_straight_signal(sampling_rate)
+        signal, time_start, time_to_end = sinus_half_straight_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 5:
-        signal, time_start, time_to_end = sinus_double_half_straight_signal(sampling_rate)
+        signal, time_start, time_to_end = sinus_double_half_straight_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 6:
-        signal, time_start, time_to_end = rectangular_signal(sampling_rate)
+        signal, time_start, time_to_end = rectangular_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 7:
-        signal, time_start, time_to_end = rectangular_symmetrical_signal(sampling_rate)
+        signal, time_start, time_to_end = rectangular_symmetrical_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 8:
-        signal, time_start, time_to_end = triangular_signal(sampling_rate)
+        signal, time_start, time_to_end = triangular_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 9:
-        signal, time_start, time_to_end = jump_signal(sampling_rate)
+        signal, time_start, time_to_end = jump_signal(sampling_rate, time_start, time_to_stop)
     elif user_input == 10:
-        signal, time_start, time_to_end = unitary_impuls(sampling_rate)
+        signal, time_start, time_to_end = unitary_impuls(sampling_rate, time_start, time_to_stop)
     elif user_input == 11:
-        signal, time_start, time_to_end = noise_impuls(sampling_rate)
+        signal, time_start, time_to_end = noise_impuls(sampling_rate, time_start, time_to_stop)
     else:
         print('niewlasciwy input')
     return signal, time_start, time_to_end
@@ -358,24 +360,32 @@ def big_input(sampling_rate):
 user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
 if user_input1 == 1:
     sampling_rate = 0
-    signal = big_input(sampling_rate)
+    time_start = -1001
+    time_to_stop = -1001
+    signal = big_input(sampling_rate, time_start, time_to_stop)
 
 elif user_input1 == 2:
     sampling_rate = int(input('enter sampling rate: '))
+    time_start = int(input('enter starting time: '))
+    time_to_stop = int(input('enter end time: '))
+
     print('choose what are you going to add')
-    signal1, t01, tk1 = big_input(sampling_rate)
+    signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
 
     print('choose second thing to add')
-    signal2, t02, tk2 = big_input(sampling_rate)
+    signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
     sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
 
 elif user_input1 == 3:
     sampling_rate = int(input('enter sampling rate: '))
+    time_start = int(input('enter starting time: '))
+    time_to_stop = int(input('enter end time: '))
+
     print('choose what are you going to subtract')
-    signal1, t01, tk1 = big_input(sampling_rate)
+    signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
 
     print('choose second thing to subtract')
-    signal2, t02, tk2 = big_input(sampling_rate)
+    signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
     subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
 
 
