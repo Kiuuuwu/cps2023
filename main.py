@@ -183,7 +183,7 @@ def triangular_signal(): #8
 
 def jump_signal(): #9
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     ts = int(input('Podaj czas skoku:'))
 
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
@@ -209,7 +209,7 @@ def jump_signal(): #9
 
 def unitary_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     values_y = np.zeros(nr_of_samplings)
     time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
@@ -233,7 +233,7 @@ def unitary_impuls():
 
 def noise_impuls():
     # time_start, time_to_end, amplitude, sampling_rate = get_input()
-    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 10
+    time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     possibility = float(input('Podaj prawdopodobienstwo:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
