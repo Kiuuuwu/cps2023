@@ -1,3 +1,5 @@
+import csv
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -120,48 +122,41 @@ def sinus_double_half_straight_signal(sampling_rate1, time_start1, time_to_stop1
 
     return signal, time_start, time_to_end
 
-
-def rectangular_signal(sampling_rate1, time_start1, time_to_stop1): #6    #todo: period musi byc intem - kaszan, trzeba to zmienic
+def rectangular_signal(sampling_rate1, time_start1, time_to_stop1): #6
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = int(input('Podaj okres podstawowy sygnału:'))
-    fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
+    frequency = 1 / basic_period
+    fill_value = float(input('Podaj współczynnik sygnału:'))
+    nr_of_samples = (time_to_end - time_start) * sampling_rate
+    time = np.arange(time_start, time_to_end, 1 / sampling_rate)
 
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
+    values_y = np.where(np.mod(time, 1 / frequency) <  fill_value / frequency, amplitude, 0)
+    # Plot the rectangular signal
+    draw_graph("Rectangular  signal", time_start, time_to_end, amplitude, nr_of_samples, values_y)
 
-    for x in range(time_start, time_to_end, basic_period):
-        for i in range(int(basic_period * fill_value * sampling_rate)):
-            values_y[x * sampling_rate + i] = amplitude
-
-    draw_graph("Rectangular signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
     count_means(values_y)
-
     return values_y, time_start, time_to_end
+
 
 def rectangular_symmetrical_signal(sampling_rate1, time_start1, time_to_stop1): #7
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = int(input('Podaj okres podstawowy sygnału:'))
-    fill_value = float(input('Podaj współczynnik wypełnienia sygnału:'))
+    frequency = 1/ basic_period # in Hz
+    fill_value = float(input('Podaj współczynnik sygnału:'))
+    nr_of_samples = (time_to_end - time_start) * sampling_rate
+    time = np.arange(time_start, time_to_end, 1 / sampling_rate)
 
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
-    for x in range(nr_of_samplings):
-        values_y[x] = -amplitude
+    values_y = np.where(np.mod(time, 1 / frequency) < fill_value / frequency, amplitude, -amplitude)
+    # Plot the rectangular signal
+    draw_graph("Rectangular symmetrical signal", time_start, time_to_end, amplitude, nr_of_samples, values_y)
 
-    for x in range(time_start, time_to_end, basic_period):
-        for i in range(int(basic_period * fill_value * sampling_rate)):
-            values_y[x * sampling_rate + i] = amplitude
-
-    draw_graph("Rectangular symmetrical signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
 
     count_means(values_y)
-
     return values_y, time_start, time_to_end
+
 
 def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     """Perform linear interpolation for x between (x1,y1) and (x2,y2) """
@@ -413,28 +408,37 @@ def big_input(sampling_rate, time_start, time_to_end):
         print('niewlasciwy input')
     return signal, time_start, time_to_end
 
+
+def save_to_csv(filename, t_start, t_stop, t_step, signal):
+    # Define the time axis
+    t = np.arange(t_start, t_stop, t_step)
+
+    # Calculate the sinusoidal signal
+    #sin_signal = np.sin(t)
+
+    # Save the signal to a CSV file
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Time', 'Signal'])
+        for i in range(len(t)):
+            writer.writerow([t[i], signal[i]])
+
+def read_from_csv(filename):
+    # Read the signal data from the CSV file
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # skip the header row
+        t = []
+        sin_signal = []
+        for row in reader:
+            t.append(float(row[0]))
+            sin_signal.append(float(row[1]))
+
+    return t, sin_signal
+
+
 # main:
-
-# # Define the time axis
-# t = np.linspace(0, 2*np.pi, 1000)
-#
-# # Define the sinusoidal signal
-# sin_signal = np.sin(t)
-#
-# # Define the half-rectified sinusoidal signal
-# half_rect_signal = np.sin(t)
-# half_rect_signal[half_rect_signal < 0] = 0
-#
-# # Multiply the two signals
-# mult_signal = sin_signal * half_rect_signal
-#
-# # Plot the signals
-# plt.plot(t, sin_signal, label='Sinusoidal signal')
-# plt.plot(t, half_rect_signal, label='Half-rectified sinusoidal signal')
-# plt.plot(t, mult_signal, label='Multiplication of signals')
-# plt.legend()
-# plt.show()
-
+filename = 'E:\politechnika\semestr6_lol_jeszcze_zyje\przetwarzanie_sygnalow\dane.csv'
 user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
 if user_input1 == 1:
     sampling_rate = 0
@@ -452,7 +456,9 @@ elif user_input1 == 2:
 
     print('choose second thing to add')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
-    sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    signal = sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+
+    #save_to_csv(filename, time_start, time_to_stop, sampling_rate, signal)
 
 elif user_input1 == 3:
     sampling_rate = int(input('enter sampling rate: '))
