@@ -295,6 +295,8 @@ def sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     #ax.legend()
     plt.show()
 
+    return signal_sum
+
 def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     # Define time vector
     #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
@@ -319,6 +321,8 @@ def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     ax.set_ylabel('Amplitude')
     #ax.legend()
     plt.show()
+
+    return signal_sum
 
 #todo: to nie wyglada na poprawne mnozenie
 def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
@@ -346,7 +350,8 @@ def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     #ax.legend()
     plt.show()
 
-#todo: trzeba sie zabezpieczyc przed dzieleniem przez 0
+    return signal_sum
+
 def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     # Define time vector
     #t = np.linspace(0, 2 * np.pi, 1000) #niech to bedzie czas startowy wczesniejszego syganlu i czas koncowy ponzniejszego,
@@ -376,6 +381,8 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     ax.set_ylabel('Amplitude')
     #ax.legend()
     plt.show()
+
+    return signal_sum
 
 def big_input(sampling_rate, time_start, time_to_end):
     user_input = int(
@@ -409,10 +416,9 @@ def big_input(sampling_rate, time_start, time_to_end):
     return signal, time_start, time_to_end
 
 
-def save_to_csv(filename, t_start, t_stop, t_step, signal):
+def save_to_csv(filename, time_start, time_to_end, t_step, signal):
     # Define the time axis
-    t = np.arange(t_start, t_stop, t_step)
-
+    t = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
     # Calculate the sinusoidal signal
     #sin_signal = np.sin(t)
 
@@ -429,17 +435,17 @@ def read_from_csv(filename):
         reader = csv.reader(csvfile)
         next(reader)  # skip the header row
         t = []
-        sin_signal = []
+        signal = []
         for row in reader:
             t.append(float(row[0]))
-            sin_signal.append(float(row[1]))
+            signal.append(float(row[1]))
 
-    return t, sin_signal
+    return t, signal
 
 
 # main:
 filename = 'E:\politechnika\semestr6_lol_jeszcze_zyje\przetwarzanie_sygnalow\dane.csv'
-user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5divide'))
+user_input1 = int(input('1 signal or noise\n2 add\n3 subtract\n4 multiply\n5 divide\n6 read from file'))
 if user_input1 == 1:
     sampling_rate = 0
     time_start = -1001
@@ -458,7 +464,7 @@ elif user_input1 == 2:
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
     signal = sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
 
-    #save_to_csv(filename, time_start, time_to_stop, sampling_rate, signal)
+    save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 3:
     sampling_rate = int(input('enter sampling rate: '))
@@ -470,7 +476,9 @@ elif user_input1 == 3:
 
     print('choose second thing to subtract')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
-    subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    signal = subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+
+    save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 4:
     sampling_rate = int(input('enter sampling rate: '))
@@ -482,7 +490,8 @@ elif user_input1 == 4:
 
     print('choose second thing to subtract')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
-    multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    signal = multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 5:
     sampling_rate = int(input('enter sampling rate: '))
@@ -494,6 +503,9 @@ elif user_input1 == 5:
 
     print('choose second thing to subtract')
     signal2, t02, tk2 = big_input(sampling_rate, time_start, time_to_stop)
-    divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    signal = divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate)
+    save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
-
+elif user_input1 == 6:
+    time, signal = read_from_csv(filename)
+    #draw_graph(signal, )
