@@ -18,19 +18,19 @@ def count_means(signal):
     print("Median power:", med_power)
 def get_input(sampling_rate, time_start, time_to_end):
     if time_start == -1001:
-        time_start = int(input('Podaj czas początkowy:'))
+        time_start = float(input('Podaj czas początkowy:'))
     if time_to_end == -1001:
-        duration = int(input('Podaj czas trwania sygnału:'))
+        duration = float(input('Podaj czas trwania sygnału:'))
         time_to_end = time_start + duration
     amplitude = float(input('Podaj amplitude sygnału:'))
     if sampling_rate == 0:
-        sampling_rate = int(input('Podaj częstotliwość próbkowania:'))
+        sampling_rate = float(input('Podaj częstotliwość próbkowania:'))
 
     return time_start, time_to_end, amplitude, sampling_rate
 
 def draw_graph(name, time_start, time_to_end, amplitude, sampling_rate, values_y):
     # Create a time axis for the signal
-    t = np.linspace(time_start, time_to_end, sampling_rate)
+    t = np.linspace(int(time_start), int(time_to_end), int(sampling_rate))
 
     plt.plot(t, values_y)
     plt.xlabel('Time (s)')
@@ -42,7 +42,7 @@ def draw_graph(name, time_start, time_to_end, amplitude, sampling_rate, values_y
 def constant_noise(sampling_rate1, time_start1, time_to_stop1):
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
 
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    nr_of_samplings = int(sampling_rate * (time_to_end - time_start))
 
     # Set the sampling rate and duration of the signal
     values_y = np.random.uniform(-amplitude/2, amplitude/2, nr_of_samplings)
@@ -56,7 +56,7 @@ def constant_noise(sampling_rate1, time_start1, time_to_stop1):
 def gaussian_noise(sampling_rate1, time_start1, time_to_stop1):
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
 
-    nr_of_samplings = sampling_rate * (time_to_end - time_start)
+    nr_of_samplings = int(sampling_rate * (time_to_end - time_start))
 
     # Set the sampling rate and duration of the signal
     values_y = np.random.normal(0, amplitude/2, nr_of_samplings)
@@ -74,7 +74,7 @@ def sinus_signal(sampling_rate1, time_start1, time_to_stop1):
 
     frequency = 2 * np.pi / basic_period
 
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+    time = np.linspace(int(time_start), int(time_to_end), int(nr_of_samplings))  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude * np.sin(frequency * time)
     draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
@@ -93,7 +93,7 @@ def sinus_half_straight_signal(sampling_rate1, time_start1, time_to_stop1):
 
     frequency = 2 * np.pi / basic_period
 
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+    time = np.linspace(int(time_start), int(time_to_end), int(nr_of_samplings))  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude / 2 * (np.sin(frequency * time) + abs(np.sin(frequency * time)))
     draw_graph("sinus_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
@@ -112,7 +112,7 @@ def sinus_double_half_straight_signal(sampling_rate1, time_start1, time_to_stop1
 
     frequency = 2 * np.pi / basic_period
 
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+    time = np.linspace(int(time_start), int(time_to_end), int(nr_of_samplings))  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude * abs(np.sin(frequency * time))
     draw_graph("sinus_double_half_straight_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
@@ -124,7 +124,7 @@ def sinus_double_half_straight_signal(sampling_rate1, time_start1, time_to_stop1
 
 def rectangular_signal(sampling_rate1, time_start1, time_to_stop1): #6
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    basic_period = int(input('Podaj okres podstawowy sygnału:'))
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
     frequency = 1 / basic_period
     fill_value = float(input('Podaj współczynnik sygnału:'))
     nr_of_samples = (time_to_end - time_start) * sampling_rate
@@ -142,7 +142,7 @@ def rectangular_signal(sampling_rate1, time_start1, time_to_stop1): #6
 
 def rectangular_symmetrical_signal(sampling_rate1, time_start1, time_to_stop1): #7
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    basic_period = int(input('Podaj okres podstawowy sygnału:'))
+    basic_period = float(input('Podaj okres podstawowy sygnału:'))
     frequency = 1/ basic_period # in Hz
     fill_value = float(input('Podaj współczynnik sygnału:'))
     nr_of_samples = (time_to_end - time_start) * sampling_rate
@@ -164,13 +164,13 @@ def interpolate(x1: float, x2: float, y1: float, y2: float, x: float):
     return ((y2 - y1) * x + x2 * y1 - x1 * y2) / (x2 - x1)
 
 def triangular_signal(sampling_rate1, time_start1, time_to_stop1): #8
-    #time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
-    time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
+    time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
+    #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
     frequency = 2 * np.pi / basic_period
 
-    time = np.linspace(time_start, time_to_end, nr_of_samplings)  # nr_of_samplings samples between time_start and time_to_end
+    time = np.linspace(int(time_start), int(time_to_end), int(nr_of_samplings))  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude * np.abs(2 * (time * frequency - np.floor(time * frequency + 0.5)))
     draw_graph("Triangular signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
@@ -183,20 +183,20 @@ def triangular_signal(sampling_rate1, time_start1, time_to_stop1): #8
 def jump_signal(sampling_rate1, time_start1, time_to_stop1): #9
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
-    ts = int(input('Podaj czas skoku:'))
+    ts = float(input('Podaj czas skoku:'))
 
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
+    values_y = np.zeros(int(nr_of_samplings))
 
-    for y in range(time_start, time_to_end):
-        for x in range(0, sampling_rate):
+    for y in range(int(time_start), int(time_to_end)):
+        for x in range(0, int(sampling_rate)):
             t = y * sampling_rate + x
             if t > ts * sampling_rate:
-                values_y[t - time_start * sampling_rate] = amplitude
+                values_y[int(t - time_start * sampling_rate)] = amplitude
             elif t == ts * sampling_rate:
-                values_y[t - time_start * sampling_rate] = amplitude / 2
+                values_y[int(t - time_start * sampling_rate)] = amplitude / 2
             else:
-                values_y[t - time_start * sampling_rate] = 0
+                values_y[int(t - time_start * sampling_rate)] = 0
 
     draw_graph("Jump signal", time_start, time_to_end, amplitude, nr_of_samplings, values_y)
     histogram(values_y)
@@ -210,16 +210,16 @@ def unitary_impuls(sampling_rate1, time_start1, time_to_stop1):
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = -10, 10, 10, 50
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
-    values_y = np.zeros(nr_of_samplings)
+    values_y = np.zeros(int(nr_of_samplings))
     time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
 
-    for y in range(time_start, time_to_end):
-        for x in range(0, sampling_rate):
+    for y in range(int(time_start), int(time_to_end)):
+        for x in range(0, int(sampling_rate)):
             t = y * sampling_rate + x
             if t == 0:
-                values_y[t - time_start * sampling_rate] = 1
+                values_y[int(t - time_start * sampling_rate)] = 1
             else:
-                values_y[t - time_start * sampling_rate] = 0
+                values_y[int(t - time_start * sampling_rate)] = 0
 
     plt.scatter(time, values_y)
     plt.xlabel('Time (s)')
@@ -237,7 +237,7 @@ def noise_impuls(sampling_rate1, time_start1, time_to_stop1):
     nr_of_samplings = sampling_rate * (time_to_end - time_start)
 
     time = np.arange(time_start * sampling_rate, time_to_end * sampling_rate, 1)
-    signal_length = nr_of_samplings
+    signal_length = int(nr_of_samplings)
     noise = np.zeros(len(time))
 
     impulse = np.random.rand(signal_length) < possibility
@@ -270,7 +270,7 @@ def sum(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
+    t = np.linspace(int(time_start), int(time_to_end), int(sampling_rate * (time_to_end - time_start)))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
 
     signal_sum = signal1 + signal2
 
@@ -295,7 +295,7 @@ def subtract(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))
+    t = np.linspace(int(time_start), int(time_to_end), int(sampling_rate * (time_to_end - time_start)))
 
     signal_sum = signal1 - signal2
 
@@ -322,7 +322,7 @@ def multiply(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
+    t = np.linspace(int(time_start), int(time_to_end), int(sampling_rate * (time_to_end - time_start)))  #zeby to dzialalo to trzebaby miec ujednolicone probkowanie dla obu dodawanych sygnalow
     #signal2[signal2 < 0] = 0
     signal_sum = signal1 * signal2
 
@@ -347,7 +347,7 @@ def divide(signal1, t01, tk1, signal2, t02, tk2, sampling_rate):
     if tk1 < tk2:
         time_to_end = tk2
 
-    t = np.linspace(time_start, time_to_end, sampling_rate * (time_to_end - time_start))
+    t = np.linspace(int(time_start), int(time_to_end), int(sampling_rate * (time_to_end - time_start)))
 
     for i in range (0, len(signal2)):
         if signal2[i] == 0:
@@ -437,9 +437,9 @@ if user_input1 == 1:
     signal = big_input(sampling_rate, time_start, time_to_stop)
 
 elif user_input1 == 2:
-    sampling_rate = int(input('enter sampling rate: '))
-    time_start = int(input('enter starting time: '))
-    time_to_stop = int(input('enter end time: '))
+    sampling_rate = float(input('enter sampling rate: '))
+    time_start = float(input('enter starting time: '))
+    time_to_stop = float(input('enter end time: '))
 
     print('choose what are you going to add')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
@@ -451,9 +451,9 @@ elif user_input1 == 2:
     save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 3:
-    sampling_rate = int(input('enter sampling rate: '))
-    time_start = int(input('enter starting time: '))
-    time_to_stop = int(input('enter end time: '))
+    sampling_rate = float(input('enter sampling rate: '))
+    time_start = float(input('enter starting time: '))
+    time_to_stop = float(input('enter end time: '))
 
     print('choose what are you going to subtract')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
@@ -465,9 +465,9 @@ elif user_input1 == 3:
     save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 4:
-    sampling_rate = int(input('enter sampling rate: '))
-    time_start = int(input('enter starting time: '))
-    time_to_stop = int(input('enter end time: '))
+    sampling_rate = float(input('enter sampling rate: '))
+    time_start = float(input('enter starting time: '))
+    time_to_stop = float(input('enter end time: '))
 
     print('choose what are you going to multiply')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
@@ -478,9 +478,9 @@ elif user_input1 == 4:
     save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
 elif user_input1 == 5:
-    sampling_rate = int(input('enter sampling rate: '))
-    time_start = int(input('enter starting time: '))
-    time_to_stop = int(input('enter end time: '))
+    sampling_rate = float(input('enter sampling rate: '))
+    time_start = float(input('enter starting time: '))
+    time_to_stop = float(input('enter end time: '))
 
     print('choose what are you going to divide')
     signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
@@ -499,9 +499,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
                             '\n5 divide this signal by another signal'
                             '\n6 divide by this signal'))
     if user_input2 == 1:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
 
         signal1 = signal
 
@@ -512,9 +512,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
         save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
     elif user_input2 == 2:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
 
         signal1 = signal
 
@@ -525,9 +525,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
         save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
     elif user_input2 == 3:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
 
         print('choose what are you going to subtract')
         signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
@@ -538,9 +538,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
         save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
     elif user_input2 == 4:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
         signal1 = signal
 
         print('choose second thing to multiply')
@@ -550,9 +550,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
         save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
     elif user_input2 == 5:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
 
         signal1 = signal
 
@@ -562,9 +562,9 @@ elif user_input1 == 6:  #NOTE: czas trwania i sampling rate musi yc taki jak zap
         save_to_csv(filename, time_start, time_to_stop, sampling_rate * (time_to_stop - time_start), signal)
 
     else:
-        sampling_rate = int(input('enter sampling rate: '))
-        time_start = int(input('enter starting time: '))
-        time_to_stop = int(input('enter end time: '))
+        sampling_rate = float(input('enter sampling rate: '))
+        time_start = float(input('enter starting time: '))
+        time_to_stop = float(input('enter end time: '))
 
         print('choose what are you going to divide')
         signal1, t01, tk1 = big_input(sampling_rate, time_start, time_to_stop)
