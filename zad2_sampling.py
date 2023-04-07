@@ -37,7 +37,7 @@ def constant_quantization_with_clip(if_draw=True):
         ax.legend()
         plt.show()
 
-    return time_start, time_end, new_signal, basic_freq
+    return time_start, time_end, new_signal
 
 
 def constant_quantization_with_rounding(if_draw):
@@ -61,26 +61,21 @@ def constant_quantization_with_rounding(if_draw):
     return time_start, time_end, new_signal, basic_freq
 
 
-def zero_order_hold_reconstruction():
-    #todo: rozjezdza sie
-    time_start, time_end, signal, original_freq = constant_quantization_with_clip(if_draw=False)
-    frequency = 50
-    new_signal = np.zeros(frequency * int(time_end - time_start))
-    original_samples_num = len(signal)
-    new_samples_num = len(new_signal)
+def first_order_hold_reconstruction():
+    time_start, time_end, signal, original_freq = constant_quantization_with_clip(if_draw=True)
+    first_order_array = []
+    first_order_array.append(signal[0])
+    for x in range(1, len(signal)):
+        if signal[x] != first_order_array[-1]:
+            first_order_array.append(signal[x])
 
-    ratio = int(new_samples_num / original_samples_num)
-    for x in range(original_samples_num):
-        print(signal[x])
-        for y in range(ratio):
-            new_signal[x * ratio + y] = copy.deepcopy(signal[x])
-            print(new_signal[x*ratio + y])
+    first_order_array = np.array(first_order_array)
 
     t1 = np.linspace(int(time_start), int(time_end), int(original_freq * (time_end - time_start)))
-    t2 = np.linspace(int(time_start), int(time_end), int(frequency * (time_end - time_start)))
+    t2 = np.linspace(int(time_start), int(time_end), len(first_order_array))
     fig, ax = plt.subplots()
-    ax.plot(t1, signal, label="original")
-    ax.plot(t2, new_signal, label="reconstructed")
+    ax.plot(t1, signal, label="digital")
+    ax.plot(t2, first_order_array, label="reconstructed")
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
     ax.legend()
@@ -125,7 +120,7 @@ def round(original_value, clip_value):
     return rounded
 
 # test()
-zero_order_hold_reconstruction()
+# first_order_hold_reconstruction()
 # constant_quantization_with_rounding(True)
-# constant_quantization_with_clip()
+constant_quantization_with_clip()
 # constant_sampling()
