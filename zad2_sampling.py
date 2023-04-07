@@ -88,18 +88,25 @@ def zero_order_hold_reconstruction():
 def first_order_hold_reconstruction():
     time_start, time_end, signal, original_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
     first_order_array = []
+    foh_time = []
     first_order_array.append(signal[0])
+    foh_time.append(time_start)
     for x in range(1, len(signal)):
         if signal[x] != first_order_array[-1]:
             first_order_array.append(signal[x])
+            foh_time.append(time_start + x * (1/original_freq))
 
     first_order_array = np.array(first_order_array)
+    # foh_time += time_start
+    foh_time = np.array(foh_time)
+    print(foh_time)
+    # plt.scatter(foh_time, first_order_array)
 
     t1 = np.linspace(int(time_start), int(time_end), int(original_freq * (time_end - time_start)))
     t2 = np.linspace(int(time_start), int(time_end), len(first_order_array))
     fig, ax = plt.subplots()
     ax.plot(t1, signal, label="digital")
-    ax.plot(t2, first_order_array, label="reconstructed")
+    ax.plot(foh_time, first_order_array, label="reconstructed")
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
     ax.legend()
