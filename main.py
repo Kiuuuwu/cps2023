@@ -66,7 +66,7 @@ def gaussian_noise(sampling_rate1, time_start1, time_to_stop1):
 
     return values_y, time_start, time_to_end
 
-def sinus_signal(sampling_rate1, time_start1, time_to_stop1):
+def sinus_signal(sampling_rate1, time_start1, time_to_stop1, if_draw):
     time_start, time_to_end, amplitude, sampling_rate = get_input(sampling_rate1, time_start1, time_to_stop1)
     #time_start, time_to_end, amplitude, sampling_rate = 0, 10, 10, 100
     basic_period = float(input('Podaj okres podstawowy sygnału:'))
@@ -77,10 +77,11 @@ def sinus_signal(sampling_rate1, time_start1, time_to_stop1):
     time = np.linspace(int(time_start), int(time_to_end), int(nr_of_samplings))  # nr_of_samplings samples between time_start and time_to_end
 
     signal = amplitude * np.sin(frequency * time)
-    draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
-    histogram(signal)
+    if if_draw:
+        draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
+        histogram(signal)
 
-    count_means(signal)
+        count_means(signal)
 
     return signal, time_start, time_to_end
 
@@ -373,7 +374,7 @@ def big_input(sampling_rate, time_start, time_to_end):
               '\n7 rectangular symmetrical\n8 triangular\n9 jump\n10 unitary impuls\n11 noise impuls'))
     signal = 0
     if user_input == 1:
-        signal, time_start, time_to_end = sinus_signal(sampling_rate, time_start, time_to_end)
+        signal, time_start, time_to_end = sinus_signal(sampling_rate, time_start, time_to_end, True)
     elif user_input == 2:
         signal, time_start, time_to_end = gaussian_noise(sampling_rate, time_start, time_to_end)
     elif user_input == 3:
