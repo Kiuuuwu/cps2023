@@ -18,3 +18,9 @@ def get_clip_value():
 
     return clip_value
 
+
+def get_n_sinc():
+    n = int(input('Podaj liczbe próbek do granicy sumowania:'))
+
+    return n
+
