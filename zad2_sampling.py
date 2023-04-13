@@ -16,6 +16,8 @@ def constant_sampling():
     samples_num = len(signal_sampled)
     main.draw_graph("Constant sampling", time_start, time_end, basic_freq * (time_end - time_start) / fs, samples_num, signal_sampled)
 
+    return signal_sampled
+
 
 def constant_quantization_with_clip(if_draw=True):
     time_start, time_end, basic_freq = user_communication.get_data()
@@ -62,7 +64,6 @@ def constant_quantization_with_rounding(if_draw):
     return time_start, time_end, new_signal, basic_freq
 
 def zero_order_hold_reconstruction():
-    #todo: ustalic czy dobrze, czy schodki powinny byc przesuniete
     time_start, time_end, signal, signal_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
     frequency = 1000
     new_signal = np.zeros(frequency * int(time_end - time_start))
@@ -84,6 +85,8 @@ def zero_order_hold_reconstruction():
     ax.set_ylabel('Amplitude')
     ax.legend()
     plt.show()
+
+    return new_signal
 
 
 def first_order_hold_reconstruction():
@@ -120,6 +123,7 @@ def sinc_function(x):
 
 
 def sinc_reconstruction():
+    #todo: jak jest za mało próbek, to wykres robi się zero
     N = user_communication.get_n_sinc()
     time_start, time_end, signal, original_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
     ts = 1 / original_freq
@@ -143,6 +147,68 @@ def sinc_reconstruction():
     return reconstructed
 
 
+def mean_squared_error(signal1, signal2):
+    if len(signal1) != len(signal2):
+        print("Liczby probek obu sygnalow nie sa rowne")
+        return 0
+
+    n = len(signal1)
+    mse = 0
+    for i in range(n-1):
+        mse += pow(signal1[i] - signal2[i], 2)
+
+    mse /= n
+    return mse
+
+
+def peak_signal_to_noise_ratio(original_signal, reconstructed_signal):
+    numerator = original_signal[0]
+    for i in range(1, len(original_signal)):
+        if original_signal[i] > numerator:
+            numerator = original_signal[i]
+
+    denominator = signal_to_noise_ratio(original_signal, reconstructed_signal)
+    if denominator == 0:
+        print("Nie dzielic przez zero, cholero")
+        return 0
+
+    psnr = 10 * math.log(numerator/denominator, 10)
+    return psnr
+
+
+def signal_to_noise_ratio(original_signal, reconstructed_signal):
+    if len(original_signal) != len(reconstructed_signal):
+        print("Liczby probek obu sygnalow nie sa rowne")
+        return 0
+
+    n = len(original_signal)
+    snr = 0
+    numerator = 0
+    denominator = 0
+    for i in range(n-1):
+        numerator += pow(original_signal[i], 2)
+        denominator += pow(original_signal[i] - reconstructed_signal[i], 2)
+
+    if denominator == 0:
+        print("Nie dzielic przez zero, cholero")
+        return 0
+
+    snr = 10 * math.log(numerator/denominator, 10)
+    return snr
+
+
+def maximum_difference(original_signal, reconstructed_signal):
+    if len(original_signal) != len(reconstructed_signal):
+        print("Liczby probek obu sygnalow nie sa rowne")
+        return 0
+
+    md = 0
+    for i in range(len(original_signal)):
+        current_difference = abs(original_signal[i] - reconstructed_signal[i])
+        if current_difference > md:
+            md = current_difference
+
+    return md
 
 
 def test(): # mozliwe ze przy ujemnych dla wartosci srodkowej zaokragla sie w zla strone, ale nie wiemy
@@ -183,9 +249,17 @@ def round(original_value, clip_value):
     return rounded
 
 # test()
-sinc_reconstruction()
+# sinc_reconstruction()
 # zero_order_hold_reconstruction()
-#first_order_hold_reconstruction()
+signal, time_start, time_to_end = main.sinus_signal(1000, 0, 6, False)
+reconstructed = sinc_reconstruction()
+print("original ", len(signal))
+print("reconstructed ", len(reconstructed))
+print("MSE:  ", mean_squared_error(reconstructed, signal))
+print("SNR: ", signal_to_noise_ratio(reconstructed, signal))
+print("PSNR: ", peak_signal_to_noise_ratio(reconstructed, signal))
+print("MD: ", maximum_difference(reconstructed, signal))
+# first_order_hold_reconstruction()
 # constant_quantization_with_rounding(True)
 # constant_quantization_with_clip()
 # constant_sampling()
