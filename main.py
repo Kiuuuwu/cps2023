@@ -79,9 +79,9 @@ def sinus_signal(sampling_rate1, time_start1, time_to_stop1, if_draw):
     signal = amplitude * np.sin(frequency * time)
     if if_draw:
         draw_graph("sinus_signal", time_start, time_to_end, amplitude, nr_of_samplings, signal)
-        histogram(signal)
+        # histogram(signal)
 
-        count_means(signal)
+        # count_means(signal)
 
     return signal, time_start, time_to_end
 
