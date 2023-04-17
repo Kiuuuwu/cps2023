@@ -65,7 +65,8 @@ def constant_quantization_with_rounding(time_start, time_end, if_draw):
     return new_signal, basic_freq, input_signal
 
 def zero_order_hold_reconstruction(time_start, time_end):
-    signal, signal_freq, original_signal = constant_quantization_with_clip(if_draw=False)
+    # signal, signal_freq, original_signal = constant_quantization_with_clip(time_start, time_end, if_draw=False)
+    signal, signal_freq, original_signal = constant_quantization_with_rounding(time_start, time_end, if_draw=False)
     frequency = 1000
     new_signal = np.zeros(frequency * int(time_end - time_start))
     original_samples_num = len(signal)
@@ -87,7 +88,7 @@ def zero_order_hold_reconstruction(time_start, time_end):
     ax.legend()
     plt.show()
 
-    return new_signal
+    return new_signal, original_signal
 
 
 def first_order_hold_reconstruction(time_start, time_end):
@@ -95,26 +96,28 @@ def first_order_hold_reconstruction(time_start, time_end):
     signal, original_freq, original_signal = constant_quantization_with_rounding(time_start, time_end, if_draw=False)
     # DLA CONSTANT SAMPLING NIE DZIALA, POZA TYM OK
 
-    first_order_array = []
+    reconstructed = []
     foh_time = []
-    first_order_array.append(signal[0])
+    reconstructed.append(signal[0])
     foh_time.append(time_start)
     for x in range(1, len(signal)):
-        if signal[x] != first_order_array[-1]:
-            first_order_array.append(signal[x])
+        if signal[x] != reconstructed[-1]:
+            reconstructed.append(signal[x])
             foh_time.append(time_start + x * (1/original_freq))
 
-    first_order_array = np.array(first_order_array)
+    reconstructed = np.array(reconstructed)
     foh_time = np.array(foh_time)
 
     t1 = np.linspace(int(time_start), int(time_end), int(original_freq * (time_end - time_start)))
     fig, ax = plt.subplots()
     ax.plot(t1, original_signal, label="original")
-    ax.plot(foh_time, first_order_array, label="reconstructed FOH")
+    ax.plot(foh_time, reconstructed, label="reconstructed FOH")
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
     ax.legend()
     plt.show()
+
+    return reconstructed, original_signal
 
 
 def sinc_function(x):
@@ -151,7 +154,7 @@ def sinc_reconstruction(time_start, time_end):
     ax.legend()
     plt.show()
 
-    return reconstructed
+    return reconstructed, original_signal
 
 
 def mean_squared_error(signal1, signal2):
@@ -262,13 +265,13 @@ time_start = 0
 time_end = 2
 
 # reconstructed = sinc_reconstruction(time_start, time_end)
-reconstructed = zero_order_hold_reconstruction(time_start, time_end)
+reconstructed, original = zero_order_hold_reconstruction(time_start, time_end)
 
 
-# print("MSE:  ", mean_squared_error(reconstructed, signal))
-# print("SNR: ", signal_to_noise_ratio(reconstructed, signal))
-# print("PSNR: ", peak_signal_to_noise_ratio(reconstructed, signal))
-# print("MD: ", maximum_difference(reconstructed, signal))
+print("MSE:  ", mean_squared_error(reconstructed, original))
+print("SNR: ", signal_to_noise_ratio(reconstructed, original))
+print("PSNR: ", peak_signal_to_noise_ratio(reconstructed, original))
+print("MD: ", maximum_difference(reconstructed, original))
 
 # first_order_hold_reconstruction()
 # constant_quantization_with_rounding(True)
