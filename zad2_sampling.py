@@ -6,21 +6,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-def constant_sampling():
+def constant_sampling(time_start, time_end, if_draw=False):
 
-    time_start, time_end, basic_freq = user_communication.get_data()
-    signal, start, end = main.sinus_signal(basic_freq, time_start, time_end, False)
+    basic_freq = user_communication.get_data()
+    original_signal, start, end = main.sinus_signal(basic_freq, time_start, time_end, False)
     fs = user_communication.get_quantization_frequency()
     fs = int(basic_freq / fs)
-    signal_sampled = signal[::fs]
-    samples_num = len(signal_sampled)
-    main.draw_graph("Constant sampling", time_start, time_end, basic_freq * (time_end - time_start) / fs, samples_num, signal_sampled)
+    signal_sampled = original_signal[::fs]
+    if if_draw:
+        samples_num = len(signal_sampled)
+        main.draw_graph("Constant sampling", time_start, time_end, basic_freq * (time_end - time_start) / fs, samples_num, signal_sampled)
 
-    return signal_sampled
+    return signal_sampled, basic_freq, original_signal
 
 
-def constant_quantization_with_clip(if_draw=True):
-    time_start, time_end, basic_freq = user_communication.get_data()
+def constant_quantization_with_clip(time_start, time_end, if_draw=True):
+    basic_freq = user_communication.get_data()
     smooth_signal, start, end = main.sinus_signal(basic_freq, time_start, time_end, False)
     clip_value = user_communication.get_clip_value()
     new_signal = copy.deepcopy(smooth_signal)
@@ -40,31 +41,31 @@ def constant_quantization_with_clip(if_draw=True):
         ax.legend()
         plt.show()
 
-    return time_start, time_end, new_signal, basic_freq, smooth_signal
+    return new_signal, basic_freq, smooth_signal
 
 
-def constant_quantization_with_rounding(if_draw):
-    time_start, time_end, basic_freq = user_communication.get_data()
-    signal, start, end = main.sinus_signal(basic_freq, time_start, time_end, False)
+def constant_quantization_with_rounding(time_start, time_end, if_draw):
+    basic_freq = user_communication.get_data()
+    input_signal, start, end = main.sinus_signal(basic_freq, time_start, time_end, False)
     clip_value = user_communication.get_clip_value()
-    new_signal = copy.deepcopy(signal)
-    for x in range(len(signal)):
-        new_signal[x] = round(signal[x], clip_value)
+    new_signal = copy.deepcopy(input_signal)
+    for x in range(len(input_signal)):
+        new_signal[x] = round(input_signal[x], clip_value)
 
     t = np.linspace(int(time_start), int(time_end), int(basic_freq * (time_end - time_start)))
     if if_draw:
         fig, ax = plt.subplots()
-        ax.plot(t, signal, label="original")
+        ax.plot(t, input_signal, label="original")
         ax.plot(t, new_signal, label="quantizied")
         ax.set_xlabel('Time (s)')
         ax.set_ylabel('Amplitude')
         ax.legend()
         plt.show()
 
-    return time_start, time_end, new_signal, basic_freq
+    return new_signal, basic_freq, input_signal
 
-def zero_order_hold_reconstruction():
-    time_start, time_end, signal, signal_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
+def zero_order_hold_reconstruction(time_start, time_end):
+    signal, signal_freq, original_signal = constant_quantization_with_clip(if_draw=False)
     frequency = 1000
     new_signal = np.zeros(frequency * int(time_end - time_start))
     original_samples_num = len(signal)
@@ -78,9 +79,9 @@ def zero_order_hold_reconstruction():
     t1 = np.linspace(int(time_start), int(time_end), int(signal_freq * (time_end - time_start)))
     t2 = np.linspace(int(time_start), int(time_end), int(frequency * (time_end - time_start)))
     fig, ax = plt.subplots()
-    ax.plot(t1, signal, label="original")
-    ax.plot(t2, new_signal, label="reconstructed")
-    ax.plot(t1, smooth_signal, label="smooth sin")
+    # ax.plot(t1, signal, label="original")
+    ax.plot(t2, new_signal, label="reconstructed ZOH")
+    ax.plot(t1, original_signal, label="original sin")
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
     ax.legend()
@@ -89,8 +90,11 @@ def zero_order_hold_reconstruction():
     return new_signal
 
 
-def first_order_hold_reconstruction():
-    time_start, time_end, signal, original_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
+def first_order_hold_reconstruction(time_start, time_end):
+    # signal, original_freq, original_signal = constant_quantization_with_clip(time_start, time_end, if_draw=False)
+    signal, original_freq, original_signal = constant_quantization_with_rounding(time_start, time_end, if_draw=False)
+    # DLA CONSTANT SAMPLING NIE DZIALA, POZA TYM OK
+
     first_order_array = []
     foh_time = []
     first_order_array.append(signal[0])
@@ -105,8 +109,8 @@ def first_order_hold_reconstruction():
 
     t1 = np.linspace(int(time_start), int(time_end), int(original_freq * (time_end - time_start)))
     fig, ax = plt.subplots()
-    ax.plot(t1, signal, label="digital")
-    ax.plot(foh_time, first_order_array, label="reconstructed")
+    ax.plot(t1, original_signal, label="original")
+    ax.plot(foh_time, first_order_array, label="reconstructed FOH")
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Amplitude')
     ax.legend()
@@ -122,10 +126,13 @@ def sinc_function(x):
     return output
 
 
-def sinc_reconstruction():
+def sinc_reconstruction(time_start, time_end):
     #todo: jak jest za mało próbek, to wykres robi się zero
     N = user_communication.get_n_sinc()
-    time_start, time_end, signal, original_freq, smooth_signal = constant_quantization_with_clip(if_draw=False)
+    signal, original_freq, original_signal = constant_quantization_with_clip(time_start, time_end, if_draw=False)
+    # signal, original_freq, original_signal = constant_quantization_with_rounding(time_start, time_end, if_draw= False)
+    # DLA CONSTANT SAMPLING NIE DZIALA, POZA TYM OK
+    # signal, original_freq, original_signal = constant_sampling(time_start, time_end, if_draw=False)
     ts = 1 / original_freq
     reconstructed = np.zeros(len(signal))
     for i in range(len(signal)):
@@ -248,18 +255,25 @@ def round(original_value, clip_value):
 
     return rounded
 
-# test()
-# sinc_reconstruction()
-# zero_order_hold_reconstruction()
-signal, time_start, time_to_end = main.sinus_signal(1000, 0, 6, False)
-reconstructed = sinc_reconstruction()
-print("original ", len(signal))
-print("reconstructed ", len(reconstructed))
-print("MSE:  ", mean_squared_error(reconstructed, signal))
-print("SNR: ", signal_to_noise_ratio(reconstructed, signal))
-print("PSNR: ", peak_signal_to_noise_ratio(reconstructed, signal))
-print("MD: ", maximum_difference(reconstructed, signal))
+
+# signal, time_start, time_to_end = main.sinus_signal(1000, 0, 6, False)
+
+time_start = 0
+time_end = 2
+
+# reconstructed = sinc_reconstruction(time_start, time_end)
+reconstructed = zero_order_hold_reconstruction(time_start, time_end)
+
+
+# print("MSE:  ", mean_squared_error(reconstructed, signal))
+# print("SNR: ", signal_to_noise_ratio(reconstructed, signal))
+# print("PSNR: ", peak_signal_to_noise_ratio(reconstructed, signal))
+# print("MD: ", maximum_difference(reconstructed, signal))
+
 # first_order_hold_reconstruction()
 # constant_quantization_with_rounding(True)
 # constant_quantization_with_clip()
 # constant_sampling()
+# test()
+# sinc_reconstruction()
+# zero_order_hold_reconstruction()

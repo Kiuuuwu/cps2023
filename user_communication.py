@@ -1,10 +1,8 @@
 
 def get_data():
-    time_start = float(input('Podaj czas początkowy:'))
-    time_end = float(input('Podaj czas koncowy:'))
     basic_freq = int(input('Podaj częstotliwość sygnału analogowego:'))
 
-    return time_start, time_end, basic_freq
+    return basic_freq
 
 
 def get_quantization_frequency():
