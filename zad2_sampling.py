@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+
 def constant_sampling(time_start, time_end, if_draw=False):
 
     basic_freq = user_communication.get_data()
@@ -143,7 +144,6 @@ def sinc_reconstruction(time_start, time_end):
         for n in range(-N, N):
             # reconstructed[i] += signal[i] * n * ts * sinc_function((t / ts) - n)
             reconstructed[i] += signal[i] * sinc_function((t / ts) - n)
-
 
     t1 = np.linspace(int(time_start), int(time_end), int(original_freq * (time_end - time_start)))
     fig, ax = plt.subplots()
